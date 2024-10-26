@@ -7,9 +7,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import com.krakedev.moduloii.evaluacionfinal.entidades.Articulo;
+import com.krakedev.moduloii.evaluacionfinal.entidades.RegistroMovimiento;
 import com.krakedev.moduloii.evaluacionfinal.excepciones.InventarioException;
 import com.krakedev.moduloii.evaluacionfinal.utils.ConexionBDD;
 
@@ -48,8 +48,7 @@ public class EvaluacionHBDD {
 					e.printStackTrace();
 				}
 			}
-		}
-		//estudiante 4
+		}}
 				public ArrayList<RegistroMovimiento> recuperarTodos(String idArticulo) throws InventarioException {
 					ArrayList<RegistroMovimiento> registroMovimientos = new ArrayList<RegistroMovimiento>();
 					Connection con = null;
@@ -108,5 +107,4 @@ public class EvaluacionHBDD {
 
 					return registroMovimientos;
 				}
-	}
 }
