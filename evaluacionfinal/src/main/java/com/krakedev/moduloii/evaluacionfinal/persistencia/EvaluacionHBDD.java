@@ -1,9 +1,13 @@
 package com.krakedev.moduloii.evaluacionfinal.persistencia;
 
 import java.sql.Connection;
-import java.util.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import com.krakedev.moduloii.evaluacionfinal.entidades.RegistroMovimiento;
 import com.krakedev.moduloii.evaluacionfinal.excepciones.InventarioException;
@@ -55,6 +59,65 @@ public class EvaluacionHBDD {
 				}
 			}
 		}
+		//estudiante 4
+				public ArrayList<RegistroMovimiento> recuperarTodos(String idArticulo) throws InventarioException {
+					ArrayList<RegistroMovimiento> registroMovimientos = new ArrayList<RegistroMovimiento>();
+					Connection con = null;
+					PreparedStatement ps = null;
+					ResultSet rs = null;
+					RegistroMovimiento registroMovimiento = null;
+
+					try {
+						con = ConexionBDD.obtenerConexion();
+						ps = con.prepareStatement("select id, id_articulos, cantidad, fecha_movimiento from registro_movimientos where id_articulos = ?");
+						ps.setString(1, idArticulo);
+						rs = ps.executeQuery();
+
+						while (rs.next()) {
+							int id = rs.getInt("id");
+							String idArticulos = rs.getString("id_articulos");
+							int cantidad = rs.getInt("cantidad");
+							Timestamp fechaMovimiento = rs.getTimestamp("fecha_movimiento");
+							SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+							String fechaStr = formato.format(fechaMovimiento);
+
+							registroMovimiento = new RegistroMovimiento(id, idArticulos, cantidad, fechaStr);
+
+							registroMovimientos.add(registroMovimiento);
+						}
+
+					} catch (InventarioException e) {
+						e.printStackTrace();
+						throw e;
+					} catch (SQLException e) {
+						e.printStackTrace();
+						throw new InventarioException("Error al consultar. Detalle: " + e.getMessage());
+					} finally {
+						if (rs != null) {
+							try {
+								rs.close();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+						if (ps != null) {
+							try {
+								ps.close();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+						if (con != null) {
+							try {
+								con.close();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+
+					return registroMovimientos;
+				}
 	}
 }
 			
